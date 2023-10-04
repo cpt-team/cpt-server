@@ -3,19 +3,32 @@
 const express = require('express')
 const app = express()
 
-// db 연동
 
-require('dotenv').config({path:"./env"});
-const connect = require('./src/bin/db');
+const connect = require('./src/modules/db');
 connect();
 
-// 안드로이드 연동
+//var createError = require('http-errors');
+
+
+// 라우팅
 let retrofitRouter = require('./src/routes/retrofit');
-let home = require('./src/routes/index')
+var indexRouter = require('./src/routes/index');
+var usersRouter = require('./src/routes/users');
+
+
 
 app.use('/retrofit', retrofitRouter);
-app.use('/',home);
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
 
+
+
+
+/* catch 404 and forward to error handler
+app.use(function(req, res, next) {
+    next(createError(404));
+});
+*/
 
 
 
