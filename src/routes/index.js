@@ -3,14 +3,19 @@
 const express = require('express');
 const router = express.Router();
 
-const User = require('../models/user');
+
+router.use('/auth', require('./auth'));
+//router.use('/diary', require('./diary'));
+//router.use('/plant', require('./plant'));
+//router.use('/user', require('./user'));
+
+module.exports = router;
 
 
-router.get('/', (req, res) => {
-    return res.send("홈 페이지");
-});
 
 
+
+/*
 router.get('/login', async(req, res) => {
    
     await User.findOne({name:'comet'})
@@ -42,5 +47,4 @@ router.get('/:name', (req, res) => {
     })
     .catch(err => res.status(500).send(err));
 });
-
-module.exports = router;
+*/
