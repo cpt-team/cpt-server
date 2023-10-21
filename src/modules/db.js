@@ -1,7 +1,5 @@
 "use strict";
 
-require('dotenv').config()
-
 const mongoose = require('mongoose');
 
 module.exports = () => {
@@ -15,7 +13,7 @@ module.exports = () => {
     console.log('db error');
     console.log(err);
    })
-  }
+}
 
 
 connect();
