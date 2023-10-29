@@ -7,16 +7,17 @@ const TOKEN_INVALID = -2;
 
 module.exports = {
     sign: async (user) => {
-        /* 현재는 idx와 email을 payload로 넣었지만 필요한 값을 넣으면 됨! */
+        /* 현재는 pw와 email을 payload로 넣었지만 필요한 값을 넣으면 됨! */
+        
         const payload = {
-            pw: user.pw,
             email: user.email,
+            pw: user.pw,
         };
-        const result = {
+        const result = jwt.sign(payload, secretKey, options)
             //sign메소드를 통해 access token 발급!
-            token: jwt.sign(payload, secretKey, options),
-            refreshToken: randToken.uid(256)
-        };
+            
+            //refreshToken: randToken.uid(256)
+        
         return result;
     },
     verify: async (token) => {
