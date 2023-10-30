@@ -21,7 +21,7 @@ module.exports = {
                 })
                 .catch((err)=>{
                     console.error(`[db] user create error: ${err}`);
-                    return res.status(200).send(util.successFalse(statusCode.DB_ERROR,responseMsg.DB_ERROR))
+                    return res.status(200).send(util.successFalse(statusCode.DB_ERROR,responseMsg.USER_INSERT_FAIL))
                 })
                 
             }

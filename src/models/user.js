@@ -24,17 +24,4 @@ const userSchema = new mongoose.Schema({
 }, {collection: 'users'});
 
 
-
-userSchema.statics.findAll = function () {
-    // return promise
-    // V4부터 exec() 필요없음
-    return this.find({});
-};
-
-// Find One by email (중복검사 해야됨 - 이메일)
-userSchema.statics.findOneByUserEmail = function (userEmail) {
-    return this.findOne({ email : userEmail });
-};
-
-
 module.exports = mongoose.model('User', userSchema);
