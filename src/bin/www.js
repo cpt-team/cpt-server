@@ -1,7 +1,6 @@
 "use strict";
 
 const app = require("../../app");
-require('dotenv').config({path:"../../.env"})
 
 // 연결 포트 지정
 const port = process.env.PORT;
