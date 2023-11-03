@@ -102,7 +102,7 @@ module.exports = {
 
             await Diary.updateOne({_id: idx},{$set: {title: title, content: content}})
             .then((result)=>{
-                console.log("수정")
+                console.log("수정완료")
                 res.status(200).send(util.successTrue(statusCode.OK,responseMsg.DIARY_UPDATE_SUCCESS))
             })
             .catch((e)=>{
@@ -116,6 +116,29 @@ module.exports = {
         }
 
 
+    },
+
+    deleteDiary: async(req,res)=>{
+        const {id} = req.params
+
+        try{
+            const idx = new ObjectId(id)
+            console.log(idx)
+
+            await Diary.deleteOne({_id: idx})
+            .then((result)=>{
+                console.log("삭제완료")
+                res.status(200).send(util.successTrue(statusCode.OK,responseMsg.DIARY_DELETE_SUCCESS))
+            })
+            .catch((e)=>{
+                console.error(`[db] user create error: ${e}`);
+                res.status(200).send(util.successFalse(statusCode.DB_ERROR,responseMsg.DB_ERROR))
+            })
+        }
+        catch{
+            console.log("ObjectId값이 아닙니다.")
+            res.status(200).send(util.successFalse(statusCode.OK,responseMsg.DIARY_OBJECTID_IS_NOT_EQUAL))
+        }
     }
 
 
