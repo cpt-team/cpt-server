@@ -44,7 +44,7 @@ module.exports = {
 
         const {email, pw} = req.body;
 
-        const user = await User.findOne({email: email})
+        await User.findOne({email: email},{pw : 1,_id:1})
         .then(async (user)=>{
                 if(user === null){
                     console.log("존재하는 email이 없습니다.")
@@ -55,7 +55,8 @@ module.exports = {
                 if(user.pw === pw){
                     jwtToken = await jwt.sign(user);
                     console.log("비밀번호 일치로 로그인 성공")
-                    return res.status(200).send(util.successTrue(statusCode.OK,responseMsg.LOGIN_SUCCESS,jwtToken))
+                    console.log(user)
+                    return res.status(200).send(util.successTrue(statusCode.OK,responseMsg.LOGIN_SUCCESS,[jwtToken,user]))
                 }
                 else{
                     console.log("비밀번호 틀림으로 로그인 실패")

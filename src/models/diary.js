@@ -17,7 +17,12 @@ const diarySchema = new mongoose.Schema({
       createAt:{
         type: String,
         required: true
-      }
+      },
+      uid:{
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "User"
+      },
       /*
       hashTags: [{
         type: String,

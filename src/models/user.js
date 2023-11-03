@@ -23,7 +23,11 @@ const userSchema = new mongoose.Schema({
         type: Date,
         required: true,
         trim: true,
-      }
+      },
+      diaries:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"Diary"
+      }],
 
 
 }, {collection: 'users'});
