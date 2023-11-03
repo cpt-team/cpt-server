@@ -2,19 +2,21 @@ const Diary = require('../models/diary')
 const responseMsg = require('../modules/responseMessage')
 const statusCode = require('../modules/statusCode')
 const util = require('../modules/resultUtils')
+const ObjectId = require('mongodb').ObjectId
+// const bson = require('bson').ObjectId
 
 // KST 설정완료
 const moment = require('moment-timezone')
-const { ObjectId } = require('mongodb')
 moment.tz.setDefault("Asia/Seoul")
 var date = moment().format('YYYY-MM-DD HH:mm:ss')
 
 
 module.exports = {
     callDiary: async(req,res)=>{
-        const {id} = req.params.id;
+        const {id} = req.params;
+        console.log(id)
 
-        await Diary.findOne({_id: new ObjectId(id)})
+        await Diary.findOne({_id: new Object(id)})
         .then((result)=>{
             if(result.length !== 0){
                 console.log("데이터 잘 찾아옴!")
