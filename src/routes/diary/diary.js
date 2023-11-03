@@ -12,7 +12,7 @@ router.get('/:id',diaryController.callDiary)
 
 router.post('/',diaryController.createDiary)
 
-router.put('/:id',authUtil)
+router.put('/:id',diaryController.updateDiary)
 router.delete('/:id',authUtil)
 
 
