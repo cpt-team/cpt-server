@@ -75,6 +75,7 @@ module.exports = {
     DIARY_UPDATE_SUCCESS:"diary 수정 성공!",
 
     // diary get
+    DIARY_OBJECTID_IS_NOT_EQUAL: "ObjectId 값이 아닙니다.",
     DIARY_GET_FAIL:"diary get fail",
     DIARY_GET_SUCCESS:"diary get success",
     DIARY_SELECT_SUCCESS: "일기 조회 성공",
