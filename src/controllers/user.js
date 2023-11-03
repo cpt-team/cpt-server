@@ -65,16 +65,5 @@ module.exports = {
             console.error(err);
         })
         
-
-        //jwtToken = await jwt.sign(user);
-
-        /* user의 idx, email을 통해 토큰을 생성! */
-        
-        // return res.status(200).json({
-        //     code: 200,
-        //     message: "token is created",
-        //     token: jwtToken,
-        // });
-        
     }
 }

@@ -5,8 +5,8 @@ const router = express.Router();
 const User = require('../models/user')
 
 
-//router.use('/auth', require('./auth'));
-//router.use('/diary', require('./diary'));
+router.use('/auth', require('./auth'));
+router.use('/diary', require('./diary/diary'));
 router.use('/plant', require('./plant'));
 router.use('/user', require('./user'));
 

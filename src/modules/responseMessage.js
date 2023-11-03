@@ -12,7 +12,6 @@ module.exports = {
     NO_USER: "존재하지 않는 회원입니다.",
     MISS_MATCH_PW: "비밀번호가 맞지 않습니다.",
     LOGIN_SUCCESS: "로그인 성공",
-    LOGIN_FAIL: "로그인 실패",
     ID_OR_PW_NULL_VALUE: "아이디/비밀번호 값이 없습니다.",
 
     // user sign out
@@ -57,23 +56,27 @@ module.exports = {
     GROSS_INSERT_SUCCESS:"잡초 심기 성공",
     GROSS_INSERT_FAIL:"잡초 심기 실패",
 
-
+    /*
     // user diary
     NEW_USER_FAIL:"새로운 유저 일기 등록 실패",
     NEW_USER_SUCCESS:"새로운 유저 일기 등록 성공",
     EXIST_USER_FAIL:"기존 유저 일기 등록 실패",
     EXIST_USER_SUCCESS:"기존 유저 일기 등록 성공",
 
+    */
+
     // diary data
-    DIARY_GET_FAIL:"diary get fail",
-    DIARY_GET_SUCCESS:"diary get success",
+    
     ALREADY_WRITE:"이미 일기를 등록 하셨습니다!",
     UPDATE_DIARY_FAIL:"diary update fail",
    
     DIARY_SAVE_SUCCESS:"diary 등록 성공!",
+    DIARY_SAVE_FAIL:"diary 등록 실패",
     DIARY_UPDATE_SUCCESS:"diary 수정 성공!",
 
     // diary get
+    DIARY_GET_FAIL:"diary get fail",
+    DIARY_GET_SUCCESS:"diary get success",
     DIARY_SELECT_SUCCESS: "일기 조회 성공",
     DIARY_SELECT_FAIL: "일기 조회 실패",
 
