@@ -28,6 +28,10 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref:"Diary"
       }],
+      emotions:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"Emotion"
+      }]
 
 
 },{versionKey:false},{collection: 'users'});

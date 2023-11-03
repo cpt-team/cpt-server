@@ -16,6 +16,8 @@ var date = moment().format('YYYY-MM-DD HH:mm:ss')
 
 module.exports = {
     callDiary: async(req,res)=>{
+
+        // diary_id
         const {id} = req.params;
 
         try{
@@ -47,18 +49,9 @@ module.exports = {
     },
     
     callAllDiary: async (req,res)=>{
-       const {uid,year,month} = req.body;
+        const {uid,year,month} = req.body;
 
-       console.log(uid)
-       
-    //    var startDate = new Date(`${year}-${month}`)
-    //    var endDate = new Date(`${year}-${parseInt(month)+1}`)
-    //    console.log(startDate)
-    //    console.log(endDate)
-        
-        // year, month받아와서 YYYY-mm 형식으로 맞추고 정규식으로 검색
-        
-        
+        console.log(uid)
         const date = `${year}-${month}`
 
         // User가 작성한 diary 전체 출력 diaries만 출력
@@ -69,8 +62,8 @@ module.exports = {
 
 
             // 전체 유저의... 데이터 값 찾기 쓰면 안댐..
-       await Diary.find({createAt: {$regex: date},uid:{_id:uid}})
-       .then((result)=>{
+        await Diary.find({createAt: {$regex: date},user:{_id:uid}})
+        .then((result)=>{
             if(result.length !== 0){
                 console.log("데이터 잘 찾아옴!")
                 console.log(result)
@@ -81,7 +74,7 @@ module.exports = {
                 res.status(200).send(util.successFalse(statusCode.OK,responseMsg.DIARY_GET_FAIL))
             }
        })
-       .catch((e)=>{
+        .catch((e)=>{
             console.error(`[db] user create error: ${e}`);
             res.status(200).send(util.successFalse(statusCode.DB_ERROR,responseMsg.DB_ERROR))
        })
@@ -98,11 +91,11 @@ module.exports = {
         // user _id
         console.log(uid);
         
-        await Diary.create({uid:uid,title: title, content: content, createAt: date})
+        await Diary.create({user:uid,title: title, content: content, createAt: date})
         .then(async (result)=>{
             res.status(200).send(util.successTrue(statusCode.OK,responseMsg.DIARY_SAVE_SUCCESS,result))
             //user 데이터의 diaries 배열에 생성한 diary ObjectId 값 추가
-           const Did = new ObjectId(await Diary.findOne({uid:uid,createAt:date},{_id:1}))
+           const Did = new ObjectId(await Diary.findOne({user:uid,createAt:date},{_id:1}))
            await User.updateOne({_id:uid},{$push:{diaries: Did}})
         })
         .catch((err)=>{
@@ -147,6 +140,7 @@ module.exports = {
 
     deleteDiary: async(req,res)=>{
 
+
         // user _id값
         const {uid} = req.body;
 
@@ -156,15 +150,17 @@ module.exports = {
 
         try{
         // user 데이터의 diaries 배열에 생성한 diary ObjectId 값 추가
-        const Did = new ObjectId(await Diary.findOne({_id:id},{_id:1}))
+        const Did = new ObjectId(id)
         await User.updateOne({_id:uid},{$pull:{diaries: Did}})
         .then((result)=>{
+            console.log(Did)
             console.log("잘 삭제 되었어요?")
+            console.log(result)
         })
         .catch((e)=>{
             console.error(e)
         })
-
+        
         const idx = new ObjectId(id)
         console.log(idx)
 

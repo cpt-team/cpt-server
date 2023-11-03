@@ -18,7 +18,7 @@ const diarySchema = new mongoose.Schema({
         type: String,
         required: true
       },
-      uid:{
+      user:{
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: "User"
