@@ -61,30 +61,30 @@ module.exports = {
         
         const date = `${year}-${month}`
 
+        // User가 작성한 diary 전체 출력 diaries만 출력
+        // await User.find({_id : new ObjectId(uid)},{uid: 0 ,_id : 0,email: 0 ,pw:0,name:0,birth:0}).populate("diaries")
+        // .then((result)=>{
+        //     res.json(result)
+        // })
 
-        await User.find({_id : new ObjectId(uid)}).populate("diaries")
-        .then((result)=>{
-            res.json(result)
-        })
 
-
-        
-    //    await Diary.find({createAt: {$regex: date}})
-    //    .then((result)=>{
-    //         if(result.length !== 0){
-    //             console.log("데이터 잘 찾아옴!")
-    //             console.log(result)
-    //             res.status(200).send(util.successTrue(statusCode.OK,responseMsg.DIARY_GET_SUCCESS,result))
-    //         }
-    //         else{
-    //             console.log("데이터 못찾아왔어요! ")
-    //             res.status(200).send(util.successFalse(statusCode.OK,responseMsg.DIARY_GET_FAIL))
-    //         }
-    //    })
-    //    .catch((e)=>{
-    //         console.error(`[db] user create error: ${e}`);
-    //         res.status(200).send(util.successFalse(statusCode.DB_ERROR,responseMsg.DB_ERROR))
-    //    })
+            // 전체 유저의... 데이터 값 찾기 쓰면 안댐..
+       await Diary.find({createAt: {$regex: date},uid:{_id:uid}})
+       .then((result)=>{
+            if(result.length !== 0){
+                console.log("데이터 잘 찾아옴!")
+                console.log(result)
+                res.status(200).send(util.successTrue(statusCode.OK,responseMsg.DIARY_GET_SUCCESS,result))
+            }
+            else{
+                console.log("데이터 못찾아왔어요! ")
+                res.status(200).send(util.successFalse(statusCode.OK,responseMsg.DIARY_GET_FAIL))
+            }
+       })
+       .catch((e)=>{
+            console.error(`[db] user create error: ${e}`);
+            res.status(200).send(util.successFalse(statusCode.DB_ERROR,responseMsg.DB_ERROR))
+       })
        
        
 

@@ -44,7 +44,7 @@ const diarySchema = new mongoose.Schema({
       */
 
 
-},{collection: 'diaries'});
+},{versionKey: false},{collection: 'diaries'});
 
 //.plugin(AutoIncreasement,{inc_field:"diaryIdx"});
 // ,{timestamps: true}
