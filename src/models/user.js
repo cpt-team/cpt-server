@@ -20,9 +20,8 @@ const userSchema = new mongoose.Schema({
         trim: true,
       },
       birth: {
-        type: Date,
+        type: String,
         required: true,
-        trim: true,
       },
       diaries:[{
         type: mongoose.Schema.Types.ObjectId,
@@ -31,6 +30,10 @@ const userSchema = new mongoose.Schema({
       emotions:[{
         type: mongoose.Schema.Types.ObjectId,
         ref:"Emotion"
+      }],
+      whethers:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"Whether"
       }]
 
 

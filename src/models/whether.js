@@ -2,8 +2,8 @@
 
 const mongoose = require('mongoose');
 
-const emotionSchema = new mongoose.Schema({
-      emotions : {
+const whetherSchema = new mongoose.Schema({
+      whethers : {
         type: Array,
         properties:{
           name: {
@@ -20,7 +20,7 @@ const emotionSchema = new mongoose.Schema({
       },
   
 
-},{versionKey:false},{collection: 'emotions'});
+},{versionKey:false},{collection: 'whethers'});
 
 
-module.exports = mongoose.model('Emotion', emotionSchema);
+module.exports = mongoose.model('Whether', whetherSchema);

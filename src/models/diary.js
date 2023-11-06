@@ -18,6 +18,12 @@ const diarySchema = new mongoose.Schema({
         type: String,
         required: true
       },
+      emotion:{
+        type: String
+      },
+      whether:{
+        type: String
+      },
       user:{
         type: mongoose.Schema.Types.ObjectId,
         required: true,

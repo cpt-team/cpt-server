@@ -7,11 +7,11 @@ const util = require('../modules/resultUtils')
 const ObjectId = require('mongoose').Types.ObjectId
 
 
-// KST 설정완료
-const moment = require('moment-timezone')
-const { JsonWebTokenError } = require('jsonwebtoken')
+// KST
+var moment = require('moment-timezone')
 moment.tz.setDefault("Asia/Seoul")
-var date = moment().format('YYYY-MM-DD HH:mm:ss')
+
+//date = moment().format('YYYY-MM-DD HH:mm:ss')
 
 
 module.exports = {
@@ -20,19 +20,19 @@ module.exports = {
         // diary_id
         const {id} = req.params;
 
+
+
         try{
             const idx = new ObjectId(id)
             console.log(idx)
 
-            await Diary.findOne({_id: idx})
+            await Diary.findOne({_id: idx},{_id:0,user:0})
             .then((result)=>{
                 if(result.length !== 0){
-                    console.log("데이터 잘 찾아옴!")
                     console.log(result)
                     res.status(200).send(util.successTrue(statusCode.OK,responseMsg.DIARY_GET_SUCCESS,result))
                 }
                 else{
-                    console.log("데이터 못찾아왔어요! ")
                     res.status(200).send(util.successFalse(statusCode.OK,responseMsg.DIARY_GET_FAIL))
                 }
             })
@@ -43,7 +43,6 @@ module.exports = {
 
         }
         catch{
-            console.log("ObjectId값이 아닙니다.")
             res.status(200).send(util.successFalse(statusCode.OK,responseMsg.DIARY_OBJECTID_IS_NOT_EQUAL))
             }
     },
@@ -54,23 +53,14 @@ module.exports = {
         console.log(uid)
         const date = `${year}-${month}`
 
-        // User가 작성한 diary 전체 출력 diaries만 출력
-        // await User.find({_id : new ObjectId(uid)},{uid: 0 ,_id : 0,email: 0 ,pw:0,name:0,birth:0}).populate("diaries")
-        // .then((result)=>{
-        //     res.json(result)
-        // })
 
-
-            // 전체 유저의... 데이터 값 찾기 쓰면 안댐..
         await Diary.find({createAt: {$regex: date},user:{_id:uid}})
         .then((result)=>{
             if(result.length !== 0){
-                console.log("데이터 잘 찾아옴!")
                 console.log(result)
                 res.status(200).send(util.successTrue(statusCode.OK,responseMsg.DIARY_GET_SUCCESS,result))
             }
             else{
-                console.log("데이터 못찾아왔어요! ")
                 res.status(200).send(util.successFalse(statusCode.OK,responseMsg.DIARY_GET_FAIL))
             }
        })
@@ -83,37 +73,42 @@ module.exports = {
 
     },
     createDiary: async (req,res)=>{
-        var date = moment().format('YYYY-MM-DD HH:mm:ss')
-        const {uid,title,content} = req.body;
-        console.log(title,content);
+        moment = require('moment-timezone')
+        moment.tz.setDefault("Asia/Seoul")
+        var date = moment(new Date()).format('YYYY-MM-DD HH:MM:SS')
+        const {uid,title,content,emotion,whether} = req.body;
+        console.log(title,content,emotion,whether);
         console.log(date);
 
         // user _id
         console.log(uid);
+
         
-        await Diary.create({user:uid,title: title, content: content, createAt: date})
+        // 다이어리 생성 
+        await Diary.create({user:uid,title: title, content: content, createAt: date,emotion:emotion,whether:whether})
         .then(async (result)=>{
             res.status(200).send(util.successTrue(statusCode.OK,responseMsg.DIARY_SAVE_SUCCESS,result))
-            //user 데이터의 diaries 배열에 생성한 diary ObjectId 값 추가
-           const Did = new ObjectId(await Diary.findOne({user:uid,createAt:date},{_id:1}))
-           await User.updateOne({_id:uid},{$push:{diaries: Did}})
         })
         .catch((err)=>{
-            console.log("실패")
             console.error(`[db] user create error: ${err}`);
             res.status(200).send(util.successFalse(statusCode.DB_ERROR,responseMsg.DB_ERROR))
         })
+        console.log(date)
 
+
+        // 주의점!! 다이어리 만들 때 모든 데이터 값이 같을 경우.. 이전의 데이터의 _id값이 들어감..
+        const Did = await Diary.findOne({user:uid,createAt:date,title:title,content:content,emotion:emotion,whether:whether},{_id:1})
+        console.log(Did)
+
+        await User.updateOne({_id:uid},{$push:{diaries: Did}})
         
-
-
-        
-
-        
+        moment = require('moment-timezone')
+        moment.tz.setDefault("Asia/Seoul")
+        var date = moment(new Date()).format('YYYY-MM-DD hh:mm:ss')
     },
     updateDiary: async(req,res)=>{
         const {title, content} = req.body;
-        // 동적라우팅으로 선택한 diary의 ObjectId값을 /diary/{ObjectId}
+        
         const {id} = req.params
 
         try{
@@ -122,7 +117,7 @@ module.exports = {
 
             await Diary.updateOne({_id: idx},{$set: {title: title, content: content}})
             .then((result)=>{
-                console.log("수정완료")
+                
                 res.status(200).send(util.successTrue(statusCode.OK,responseMsg.DIARY_UPDATE_SUCCESS))
             })
             .catch((e)=>{
@@ -131,7 +126,6 @@ module.exports = {
             })
         }
         catch{
-            console.log("ObjectId값이 아닙니다.")
             res.status(200).send(util.successFalse(statusCode.OK,responseMsg.DIARY_OBJECTID_IS_NOT_EQUAL))
         }
 
@@ -141,32 +135,27 @@ module.exports = {
     deleteDiary: async(req,res)=>{
 
 
-        // user _id값
+        // user _id
         const {uid} = req.body;
 
-        // diary _id값
+        // diary _id
         const {id} = req.params;
 
-
+        console.log(id)
         try{
-        // user 데이터의 diaries 배열에 생성한 diary ObjectId 값 추가
-        const Did = new ObjectId(id)
+        const Did = new ObjectId(await Diary.findOne({_id: id},{_id:1}))
         await User.updateOne({_id:uid},{$pull:{diaries: Did}})
         .then((result)=>{
             console.log(Did)
-            console.log("잘 삭제 되었어요?")
             console.log(result)
         })
         .catch((e)=>{
             console.error(e)
         })
         
-        const idx = new ObjectId(id)
-        console.log(idx)
 
-        await Diary.deleteOne({_id: idx})
+        await Diary.deleteOne({_id: id})
         .then((result)=>{
-            console.log("삭제완료")
             res.status(200).send(util.successTrue(statusCode.OK,responseMsg.DIARY_DELETE_SUCCESS))
         })
         .catch((e)=>{
@@ -176,7 +165,6 @@ module.exports = {
         
     }
     catch{
-            console.log("ObjectId값이 아닙니다.")
             res.status(200).send(util.successFalse(statusCode.OK,responseMsg.DIARY_OBJECTID_IS_NOT_EQUAL))
         }
     
