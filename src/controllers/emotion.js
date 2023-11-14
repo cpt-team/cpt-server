@@ -14,6 +14,9 @@ module.exports = {
             {name: "fine",isActive: true},
             {name: "good",isActive: true},
             {name: "love",isActive: true},
+            {name: "angry",isActive:true},
+            {name: "sleepy",isActive:true},
+
 
         ];
 

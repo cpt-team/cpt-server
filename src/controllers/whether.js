@@ -14,6 +14,7 @@ module.exports = {
             {name: "cloudy",isActive: true},
             {name: "rainy",isActive: true},
             {name: "snowy",isActive: true},
+            {name:"sunnyCloudy",isActive:true}
 
         ];
 

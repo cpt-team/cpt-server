@@ -65,6 +65,13 @@ module.exports = {
 
     */
 
+    // Emotion
+    EMOTION_NOT_EXIST:"이모티콘이 존재하지 않는 값입니다.",
+
+
+    // Whether
+    WHETHER_NOT_EXIST:"날씨가 존재하지 않는 값입니다.",
+
     // diary data
     
     ALREADY_WRITE:"이미 일기를 등록 하셨습니다!",
@@ -73,6 +80,7 @@ module.exports = {
     DIARY_SAVE_SUCCESS:"diary 등록 성공!",
     DIARY_SAVE_FAIL:"diary 등록 실패",
     DIARY_UPDATE_SUCCESS:"diary 수정 성공!",
+    DIARY_CREATE_FAIL:"diary 등록 실패",
 
     // diary get
     DIARY_OBJECTID_IS_NOT_EQUAL: "ObjectId 값이 아닙니다.",
@@ -80,6 +88,8 @@ module.exports = {
     DIARY_GET_SUCCESS:"diary get success",
     DIARY_SELECT_SUCCESS: "일기 조회 성공",
     DIARY_SELECT_FAIL: "일기 조회 실패",
+    DIARY_ALREADY_EXIST: "해당 날짜에 다이어리가 이미 존재합니다",
+    
 
     // diary delete
     DIARY_DELETE_SUCCESS: "일기 삭제 성공",
