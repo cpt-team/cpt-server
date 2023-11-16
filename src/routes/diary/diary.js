@@ -7,13 +7,11 @@ const diaryController = require('../../controllers/diary')
 
 
 router.get('/', diaryController.callAllDiary)
-router.get('/:id',diaryController.callDiary)
-
-
 router.post('/',diaryController.createDiary)
 
-router.put('/:id',diaryController.updateDiary)
-router.delete('/:id',diaryController.deleteDiary)
+router.get('/diarys',diaryController.callDiary)
+router.put('/',diaryController.updateDiary)
+router.delete('/',diaryController.deleteDiary)
 
 
 

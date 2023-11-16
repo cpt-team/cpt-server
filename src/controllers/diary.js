@@ -22,13 +22,12 @@ module.exports = {
         // diary_id
         const {id} = req.query;
 
+        console.log(id)
         try{
-            const idx = new ObjectId(id)
-            console.log(idx)
-
-            await Diary.findOne({_id: idx},{_id:0,user:0})
+            
+            await Diary.find({_id: id},{_id:0,user:0,createAt:0})
             .then((result)=>{
-                if(result.length !== 0){
+                if(result !== null){
                     console.log(result)
                     res.status(200).send(util.successTrue(statusCode.OK,responseMsg.DIARY_GET_SUCCESS,result))
                 }
@@ -37,7 +36,7 @@ module.exports = {
                 }
             })
             .catch((e)=>{
-                console.error(`[db] user create error: ${e}`);
+                console.error(`[db] user call diary error: ${e}`);
                 res.status(200).send(util.successFalse(statusCode.DB_ERROR,responseMsg.DB_ERROR))
             })
 
@@ -66,8 +65,8 @@ module.exports = {
 
         await Diary.find({createAt: {$regex: date},user:{_id:uid}},{user:0})
         .then((result)=>{
-            if(result.length !== 0){
-                console.log(result)
+            if(result !== null){
+                
                 res.status(200).send(util.successTrue(statusCode.OK,responseMsg.DIARY_GET_SUCCESS,result))
             }
             else{
@@ -75,7 +74,7 @@ module.exports = {
             }
        })
         .catch((e)=>{
-            console.error(`[db] user find error: ${e}`);
+            console.error(`[db] user call diarys error: ${e}`);
             res.status(200).send(util.successFalse(statusCode.DB_ERROR,responseMsg.DB_ERROR))
        })
        
@@ -84,6 +83,7 @@ module.exports = {
         moment = require('moment-timezone')
         moment.tz.setDefault("Asia/Seoul")
         var date = moment(new Date()).format('YYYY-MM-DD')
+        console.log(req.body)
         const {uid,title,content,emotion,whether} = req.body;
         console.log(title,content,emotion,whether);
         console.log(date);
@@ -135,7 +135,7 @@ module.exports = {
         })
         console.log(date)
 
-        await Diary.findOne({user:uid,createAt:date,title:title,content:content,emotion:emotion,whether:whether},{_id:1})
+        await Diary.find({user:uid,createAt:date,title:title,content:content,emotion:emotion,whether:whether},{_id:1,createAt:1})
         .then((result)=>{
             return res.status(200).send(util.successTrue(statusCode.OK,responseMsg.DIARY_SAVE_SUCCESS,result))
         })
@@ -146,11 +146,11 @@ module.exports = {
 
 
         // 주의점!! 다이어리 만들 때 모든 데이터 값이 같을 경우.. 이전의 데이터의 _id값이 들어감..
-        const Did = await Diary.findOne({user:uid,createAt:date,title:title,content:content,emotion:emotion,whether:whether},{_id:1})
-        
+        const Did = await Diary.find({user:uid,createAt:date,title:title,content:content,emotion:emotion,whether:whether},{_id:1})
         console.log(Did)
 
         await User.updateOne({_id:uid},{$push:{diaries: Did}})
+
         /*
         moment = require('moment-timezone')
         moment.tz.setDefault("Asia/Seoul")
@@ -161,17 +161,17 @@ module.exports = {
 
 
     updateDiary: async(req,res)=>{
-        const {title, content} = req.body;
+        const {id,title, content,emotion,whether} = req.body;
         
-        const {id} = req.params
+        console.log(id)
 
         try{
             const idx = new ObjectId(id)
             console.log(idx)
 
-            await Diary.updateOne({_id: idx},{$set: {title: title, content: content}})
+            await Diary.updateOne({_id: idx},{$set: {title: title, content: content,emotion:emotion,whether:whether}})
             .then((result)=>{
-                
+                console.log("modified diary")
                 res.status(200).send(util.successTrue(statusCode.OK,responseMsg.DIARY_UPDATE_SUCCESS))
             })
             .catch((e)=>{
