@@ -91,50 +91,63 @@ module.exports = {
         // user _id
         console.log(uid);
 
+        console.log(new ObjectId(uid))
+        
 
         // emotion 검증
         var emotions = await Emotion.find({user:uid,emotions:{$elemMatch:{name:emotion}}},{_id:0,user:0})
-        if(emotions != null){
-            console.log("emotion 존재")
-        }
-        else {
+
+        if(emotion === "null" || emotions == null){
             console.log("emotion 존재하지 않음")
             return res.status(200).send(util.successFalse(statusCode.BAD_REQUEST,responseMsg.EMOTION_NOT_EXIST))
         }
+        else {
+            console.log("emotion 존재")
+        }
+        
 
 
         // whether 검증
         var whethers = await Whether.find({user:uid,whethers:{$elemMatch:{name:whether}}},{_id:0,user:0})
-        if(whethers != null){
-            console.log("whether 존재")
-        }
-        else {
+        if(whether === "null" || whethers == null) {
             console.log("whether 존재하지 않음")
             return res.status(200).send(util.successFalse(statusCode.BAD_REQUEST,responseMsg.WHETHER_NOT_EXIST))
         }
+        else {
+            console.log("whether 존재")
+        }
+        
 
         // Diary 존재 검증
-        var checkDiary = await Diary.findOne({user:uid,createAt:date})        
+        var checkDiary = await Diary.findOne({user:new ObjectId(uid),createAt:date})        
         
-        if(checkDiary != null){
+        if(checkDiary !== null){
             console.log("diary 중복됨")
             return res.status(200).send(util.successFalse(statusCode.BAD_REQUEST,responseMsg.DIARY_ALREADY_EXIST))
         }
 
+        
         // 다이어리 생성 
-        await Diary.create({user:uid,title: title, content: content, createAt: date,emotion:emotion,whether:whether},{_id:1})
-        .then(async (result)=>{
-            return res.status(200).send(util.successTrue(statusCode.OK,responseMsg.DIARY_SAVE_SUCCESS,result))
-        })
+        await Diary.create({title: title, content: content, createAt: date, emotion:emotion,whether:whether,user: new ObjectId(uid)})
         .catch((err)=>{
-            console.error(`[db] user create error: ${err}`);
+            console.error(`[db] diary create 출력 에러: ${err}`);
             return res.status(200).send(util.successFalse(statusCode.DB_ERROR,responseMsg.DB_ERROR))
         })
         console.log(date)
 
+        await Diary.findOne({user:uid,createAt:date,title:title,content:content,emotion:emotion,whether:whether},{_id:1})
+        .then((result)=>{
+            return res.status(200).send(util.successTrue(statusCode.OK,responseMsg.DIARY_SAVE_SUCCESS,result))
+        })
+        .catch((err)=>{
+            console.error(`[db] diary find 출력 에러: ${err}`);
+            return res.status(200).send(util.successFalse(statusCode.DB_ERROR,responseMsg.DB_ERROR))
+        })
+
 
         // 주의점!! 다이어리 만들 때 모든 데이터 값이 같을 경우.. 이전의 데이터의 _id값이 들어감..
         const Did = await Diary.findOne({user:uid,createAt:date,title:title,content:content,emotion:emotion,whether:whether},{_id:1})
+        
         console.log(Did)
 
         await User.updateOne({_id:uid},{$push:{diaries: Did}})
