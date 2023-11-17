@@ -7,6 +7,7 @@ const responseMsg = require('../modules/responseMessage')
 const statusCode = require('../modules/statusCode')
 const util = require('../modules/resultUtils')
 const ObjectId = require('mongoose').Types.ObjectId
+const funs = require('../modules/funArr')
 
 
 // KST
@@ -32,14 +33,23 @@ module.exports = {
         
         console.log(date)
 
+        function isEmptyArr(arr)  {
+            if(Array.isArray(arr) && arr.length === 0)  {
+              return true;
+            }
+            
+            return false;
+          }
+
+        
         await Odos.find({createAt: {$regex: date},user:{_id:uid}},{user:0})
         .then((result)=>{
-            if(result !== null){
-                
-                res.status(200).send(util.successTrue(statusCode.OK,responseMsg.ODOS_GET_SUCCESS,result))
+            console.log(result)
+            if(result === null || funs.isEmptyArr(result)){
+                res.status(200).send(util.successFalse(statusCode.OK,responseMsg.ODOS_GET_FAIL))
             }
             else{
-                res.status(200).send(util.successFalse(statusCode.OK,responseMsg.ODOS_GET_FAIL))
+                res.status(200).send(util.successTrue(statusCode.OK,responseMsg.ODOS_GET_SUCCESS,result))
             }
        })
         .catch((e)=>{

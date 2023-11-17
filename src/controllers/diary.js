@@ -7,6 +7,7 @@ const responseMsg = require('../modules/responseMessage')
 const statusCode = require('../modules/statusCode')
 const util = require('../modules/resultUtils')
 const ObjectId = require('mongoose').Types.ObjectId
+const funs = require('../modules/funArr')
 
 
 // KST
@@ -27,12 +28,13 @@ module.exports = {
             
             await Diary.find({_id: id},{_id:0,user:0,createAt:0})
             .then((result)=>{
-                if(result !== null){
-                    console.log(result)
-                    res.status(200).send(util.successTrue(statusCode.OK,responseMsg.DIARY_GET_SUCCESS,result))
+                if(result === null || funs.isEmptyArr(result)){
+                    res.status(200).send(util.successFalse(statusCode.OK,responseMsg.DIARY_GET_FAIL)) 
                 }
                 else{
-                    res.status(200).send(util.successFalse(statusCode.OK,responseMsg.DIARY_GET_FAIL))
+                    console.log(result)
+                    res.status(200).send(util.successTrue(statusCode.OK,responseMsg.DIARY_GET_SUCCESS,result))
+                   
                 }
             })
             .catch((e)=>{
@@ -65,12 +67,12 @@ module.exports = {
 
         await Diary.find({createAt: {$regex: date},user:{_id:uid}},{user:0})
         .then((result)=>{
-            if(result !== null){
-                
-                res.status(200).send(util.successTrue(statusCode.OK,responseMsg.DIARY_GET_SUCCESS,result))
+            if(result === null || funs.isEmptyArr(result)){
+                res.status(200).send(util.successFalse(statusCode.OK,responseMsg.DIARY_GET_FAIL))
+            
             }
             else{
-                res.status(200).send(util.successFalse(statusCode.OK,responseMsg.DIARY_GET_FAIL))
+                res.status(200).send(util.successTrue(statusCode.OK,responseMsg.DIARY_GET_SUCCESS,result))    
             }
        })
         .catch((e)=>{
@@ -97,7 +99,7 @@ module.exports = {
         // emotion 검증
         var emotions = await Emotion.find({user:uid,emotions:{$elemMatch:{name:emotion}}},{_id:0,user:0})
 
-        if(emotion === "null" || emotions == null){
+        if(emotion === "null" || funs.isEmptyArr(emotions)){
             console.log("emotion 존재하지 않음")
             return res.status(200).send(util.successFalse(statusCode.BAD_REQUEST,responseMsg.EMOTION_NOT_EXIST))
         }
@@ -109,7 +111,7 @@ module.exports = {
 
         // whether 검증
         var whethers = await Whether.find({user:uid,whethers:{$elemMatch:{name:whether}}},{_id:0,user:0})
-        if(whether === "null" || whethers == null) {
+        if(whether === "null" || funs.isEmptyArr(whethers)) {
             console.log("whether 존재하지 않음")
             return res.status(200).send(util.successFalse(statusCode.BAD_REQUEST,responseMsg.WHETHER_NOT_EXIST))
         }
