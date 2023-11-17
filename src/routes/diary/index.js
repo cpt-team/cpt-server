@@ -3,6 +3,6 @@
 const express = require('express');
 const router = express.Router();
 
-router.use('/', require('./odos'));
+router.use('/', require('./diary'));
 
 module.exports = router;

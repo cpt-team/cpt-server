@@ -34,7 +34,11 @@ const userSchema = new mongoose.Schema({
       whethers:[{
         type: mongoose.Schema.Types.ObjectId,
         ref:"Whether"
-      }]
+      }],
+      odos:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"Odos"
+      }],
 
 
 },{versionKey:false},{collection: 'users'});

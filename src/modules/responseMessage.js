@@ -94,10 +94,24 @@ module.exports = {
     // diary delete
     DIARY_DELETE_SUCCESS: "일기 삭제 성공",
     DIARY_DELETE_FAIL: "일기 삭제 실패",
-    
+
+
+    // odos data
    
+    ODOS_SAVE_SUCCESS:"odos 등록 성공!",
+    ODOS_SAVE_FAIL:"odos 등록 실패",
+    ODOS_CREATE_FAIL:"odos 등록 실패",
 
+    // odos get
+    ODOS_OBJECTID_IS_NOT_EQUAL: "ObjectId 값이 아닙니다.",
+    ODOS_GET_FAIL:"odos get fail",
+    ODOS_GET_SUCCESS:"odos get success",
+    ODOS_SELECT_SUCCESS: "odos 조회 성공",
+    ODOS_SELECT_FAIL: "odos 조회 실패",
+    ODOS_ALREADY_EXIST: "해당 날짜에 odos가 이미 존재합니다",
+    
 
+    // 미정
     SEND_EMAIL_FAIL: "메일 전송 실패",
     SEND_EMAIL_SUCCESS:"메일 전송 성공",
     UNDEFINED_EMAIL: "저장된 이메일이 아닙니다.",
