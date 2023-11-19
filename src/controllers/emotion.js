@@ -16,10 +16,7 @@ module.exports = {
             {name: "love",isActive: true},
             {name: "angry",isActive:true},
             {name: "sleepy",isActive:true},
-
-
         ];
-
 
         // 이모지 첫 초기화
         await Emotion.insertMany({emotions: myEmotion,user: uid})
@@ -32,7 +29,6 @@ module.exports = {
         })
 
         const id = await Emotion.findOne({user: uid},{_id:1})
-        
 
         // await User.updateOne({_id:uid},{$push:{diaries: Did}})
         await User.updateOne({_id:uid},{$push:{emotions: id}})
@@ -42,8 +38,6 @@ module.exports = {
         .catch((e)=>{
             console.error("user에 emotion값 잘 안들어감 "+ e)
         })
-
-        
         // 결과 출력해보기
         /*
         await Emotion.findOne({user:uid}).then((result)=>{
@@ -51,12 +45,5 @@ module.exports = {
             console.log(result)
         })
         */
-        
-
-        
-
-    
     }
-
-
 }

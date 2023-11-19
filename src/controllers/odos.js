@@ -18,11 +18,10 @@ moment.tz.setDefault("Asia/Seoul")
 
 
 module.exports = {
-    callAllOdos: async (req,res)=>{
+    callAllOdos: async (req,res)=>{ // 유저의 한 줄 일기 가져오기
         const {uid,year,month} = req.query;
         var date
         console.log(uid)
-
         // 날짜 10 밑으로는 0 붙여주기!
         if(Number(month) < 10){
             date = `${year}-0${month}`
@@ -30,18 +29,13 @@ module.exports = {
         else{
             date = `${year}-${month}`
         }
-        
         console.log(date)
-
         function isEmptyArr(arr)  {
             if(Array.isArray(arr) && arr.length === 0)  {
               return true;
             }
-            
             return false;
           }
-
-        
         await Odos.find({createAt: {$regex: date},user:{_id:uid}},{user:0})
         .then((result)=>{
             console.log(result)
@@ -58,7 +52,8 @@ module.exports = {
        })
        
     },
-    createOdos: async (req,res)=>{
+
+    createOdos: async (req,res)=>{ // 한 줄 일기 만드는 부분
         moment = require('moment-timezone')
         moment.tz.setDefault("Asia/Seoul")
         var date = moment(new Date()).format('YYYY-MM-DD')
@@ -72,79 +67,63 @@ module.exports = {
 
         console.log(new ObjectId(uid))
         
-
         // emotion 검증
-        var emotions = await Emotion.find({user:uid,emotions:{$elemMatch:{name:emotion}}},{_id:0,user:0})
-
+        var emotions = await Emotion.find({user:uid, emotions:{$elemMatch:{name:emotion}}}, {_id:0, user:0})
         if(emotion === "null" || emotions == null){
             console.log("emotion 존재하지 않음")
-            return res.status(200).send(util.successFalse(statusCode.BAD_REQUEST,responseMsg.EMOTION_NOT_EXIST))
+            return res.status(200).send(util.successFalse(statusCode.BAD_REQUEST, responseMsg.EMOTION_NOT_EXIST))
         }
         else {
             console.log("emotion 존재")
         }
-        
-
-
         // whether 검증
-        var whethers = await Whether.find({user:uid,whethers:{$elemMatch:{name:whether}}},{_id:0,user:0})
+        var whethers = await Whether.find({user:uid, whethers:{$elemMatch:{name:whether}}}, {_id:0, user:0})
         if(whether === "null" || whethers == null) {
             console.log("whether 존재하지 않음")
-            return res.status(200).send(util.successFalse(statusCode.BAD_REQUEST,responseMsg.WHETHER_NOT_EXIST))
+            return res.status(200).send(util.successFalse(statusCode.BAD_REQUEST, responseMsg.WHETHER_NOT_EXIST))
         }
         else {
             console.log("whether 존재")
         }
-        
-
+    
         // odos 존재 검증
-        var checkOdos = await Odos.findOne({user:new ObjectId(uid),createAt:date})        
-        
-        if(checkOdos !== null){
+        var checkOdos = await Odos.findOne({user: new ObjectId(uid), createAt:date}) // 오늘 날짜로 한 줄 일기 있는지 확인    
+        if(checkOdos !== null){ // 존재하면 오류 보내기
             console.log("odos 중복됨")
-            return res.status(200).send(util.successFalse(statusCode.BAD_REQUEST,responseMsg.ODOS_ALREADY_EXIST))
+            return res.status(200).send(util.successFalse(statusCode.BAD_REQUEST, responseMsg.ODOS_ALREADY_EXIST))
         }
 
-        
         // odos 생성 
-        await Odos.create({content: content, createAt: date, emotion:emotion,whether:whether,user: new ObjectId(uid)})
+        await Odos.create({content: content, createAt: date, emotion:emotion,whether:whether,user: new ObjectId(uid)}) // 한 줄 일기 저장하는 부분
         .catch((err)=>{
             console.error(`[db] odos create 출력 에러: ${err}`);
             return res.status(200).send(util.successFalse(statusCode.DB_ERROR,responseMsg.DB_ERROR))
         })
         console.log(date)
 
-        await Odos.find({user:uid,createAt:date,content:content,emotion:emotion,whether:whether},{_id:1,createAt:1})
+        await Odos.find({user:uid, createAt:date, content:content, emotion:emotion, whether:whether}, {_id:1,createAt:1}) // 저장 됐는지 확인하는 부분 같음
         .then((result)=>{
-            return res.status(200).send(util.successTrue(statusCode.OK,responseMsg.ODOS_SAVE_SUCCESS,result))
+            return res.status(200).send(util.successTrue(statusCode.OK, responseMsg.ODOS_SAVE_SUCCESS, result)) // 저장 성공 메시지
         })
         .catch((err)=>{
             console.error(`[db] odos find 출력 에러: ${err}`);
-            return res.status(200).send(util.successFalse(statusCode.DB_ERROR,responseMsg.DB_ERROR))
+            return res.status(200).send(util.successFalse(statusCode.DB_ERROR, responseMsg.DB_ERROR))
         })
 
-
         // 주의점!! odos 만들 때 모든 데이터 값이 같을 경우.. 이전의 데이터의 _id값이 들어감..
-        const Oid = await Odos.find({user:uid,createAt:date,content:content,emotion:emotion,whether:whether},{_id:1})
+        const Oid = await Odos.find({user:uid, createAt:date, content:content, emotion:emotion, whether:whether}, {_id:1})
         console.log(Oid)
-
-        //
-        await User.updateOne({_id:uid},{$push:{odos: Oid}})
+        await User.updateOne({_id:uid}, {$push:{odos: Oid}})
         .then((result)=>{
             console.log("유저에 odos업데이트 성공")
         })
         .catch((e)=>{
             console.error(`[db] odos user update 출력 에러: ${e}`);
         })
-
         /*
         moment = require('moment-timezone')
         moment.tz.setDefault("Asia/Seoul")
         var date = moment(new Date()).format('YYYY-MM-DD hh:mm:ss')
         */
-    
     }
-
-    
-
 }

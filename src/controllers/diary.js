@@ -2,30 +2,23 @@ const Diary = require('../models/diary')
 const User = require('../models/user')
 const Emotion = require('../models/emotion')
 const Whether = require('../models/whether')
-
 const responseMsg = require('../modules/responseMessage')
 const statusCode = require('../modules/statusCode')
 const util = require('../modules/resultUtils')
 const ObjectId = require('mongoose').Types.ObjectId
 const funs = require('../modules/funArr')
-
-
 // KST
 var moment = require('moment-timezone')
 moment.tz.setDefault("Asia/Seoul")
 
 //date = moment().format('YYYY-MM-DD HH:mm:ss')
 
-
 module.exports = {
     callDiary: async(req,res)=>{
-
         // diary_id
         const {id} = req.query;
-
         console.log(id)
         try{
-            
             await Diary.find({_id: id},{_id:0,user:0,createAt:0})
             .then((result)=>{
                 if(result === null || funs.isEmptyArr(result)){
@@ -34,14 +27,12 @@ module.exports = {
                 else{
                     console.log(result)
                     res.status(200).send(util.successTrue(statusCode.OK,responseMsg.DIARY_GET_SUCCESS,result))
-                   
                 }
             })
             .catch((e)=>{
                 console.error(`[db] user call diary error: ${e}`);
                 res.status(200).send(util.successFalse(statusCode.DB_ERROR,responseMsg.DB_ERROR))
             })
-
         }
         catch{
             res.status(200).send(util.successFalse(statusCode.OK,responseMsg.DIARY_OBJECTID_IS_NOT_EQUAL))
@@ -93,8 +84,7 @@ module.exports = {
         // user _id
         console.log(uid);
 
-        console.log(new ObjectId(uid))
-        
+        console.log(new ObjectId(uid))  
 
         // emotion 검증
         var emotions = await Emotion.find({user:uid,emotions:{$elemMatch:{name:emotion}}},{_id:0,user:0})
@@ -107,8 +97,6 @@ module.exports = {
             console.log("emotion 존재")
         }
         
-
-
         // whether 검증
         var whethers = await Whether.find({user:uid,whethers:{$elemMatch:{name:whether}}},{_id:0,user:0})
         if(whether === "null" || funs.isEmptyArr(whethers)) {
@@ -118,7 +106,6 @@ module.exports = {
         else {
             console.log("whether 존재")
         }
-        
 
         // Diary 존재 검증
         var checkDiary = await Diary.findOne({user:new ObjectId(uid),createAt:date})        
@@ -189,18 +176,14 @@ module.exports = {
     },
 
     deleteDiary: async(req,res)=>{
-
-
         // user _id
         const {uid} = req.body;
-
         // diary _id
         const {id} = req.params;
-
         console.log(id)
         try{
         const Did = new ObjectId(await Diary.findOne({_id: id},{_id:1}))
-        await User.updateOne({_id:uid},{$pull:{diaries: Did}})
+        await User.updateOne({_id: uid}, {$pull: {diaries: Did}})
         .then((result)=>{
             console.log(Did)
             console.log(result)
@@ -208,23 +191,18 @@ module.exports = {
         .catch((e)=>{
             console.error(e)
         })
-        
 
         await Diary.deleteOne({_id: id})
         .then((result)=>{
-            res.status(200).send(util.successTrue(statusCode.OK,responseMsg.DIARY_DELETE_SUCCESS))
+            res.status(200).send(util.successTrue(statusCode.OK, responseMsg.DIARY_DELETE_SUCCESS))
         })
         .catch((e)=>{
             console.error(`[db] user create error: ${e}`);
-            res.status(200).send(util.successFalse(statusCode.DB_ERROR,responseMsg.DB_ERROR))
+            res.status(200).send(util.successFalse(statusCode.DB_ERROR, responseMsg.DB_ERROR))
         })
-        
     }
     catch{
-            res.status(200).send(util.successFalse(statusCode.OK,responseMsg.DIARY_OBJECTID_IS_NOT_EQUAL))
+            res.status(200).send(util.successFalse(statusCode.OK, responseMsg.DIARY_OBJECTID_IS_NOT_EQUAL))
         }
-    
     }
-    
-
 }
