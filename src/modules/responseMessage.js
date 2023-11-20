@@ -3,7 +3,6 @@
 module.exports = {
     NULL_VALUE: "필요한 값이 없습니다",
     OUT_OF_VALUE: "파라미터 값이 잘못되었습니다",
-
     // db
 
     DB_ERROR:"db error",
@@ -18,7 +17,6 @@ module.exports = {
     LOGOUT_SUCCESS: "로그아웃 성공",
     LOGOUT_FAIL: "로그아웃 실패",
 
-
     // user signup
     USER_INSERT_FAIL: 'user insert fail',
     SIGNUP_SUCCESS: '회원 가입 성공',
@@ -28,9 +26,6 @@ module.exports = {
     // user create/delete
     USER_DELETE_FAIL:'user 계정 삭제 실패',
     USER_DELETE_SUCCESS:'user 계정 삭제 성공!',
-
-
-
 
     // token
     REFRESH_UPDATE_ERROR: 'refreshtoken DB등록 오류',
@@ -50,6 +45,14 @@ module.exports = {
     PLANT_FAIL:"plant 실패",
     ALREADY_PLANT:"이미 심으셨습니다!",
     WRITE_DIARY:"일기를 써야 심을 수 있어요!",
+
+    ///////////////
+    NO_PLANT: "식물이 없음",
+    FIND_PLANT: "식물 찾음",
+    PLANT_SAVE_SUCCESS: "식물 저장 성공",
+    PLANT_CAN_SAVE: "키우고 있는 식물 없음. 선택 가능",
+    PLANT_SAVE_FAIL: "식물 저장 실패 이미 들어가 있는 식물",
+    /////////////////
 
     BALLOON_SELECT_FAIL:"balloon select fail",
     TREENUM_FAIL:"treeNum 가져오기 fail",

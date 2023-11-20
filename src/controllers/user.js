@@ -14,16 +14,12 @@ module.exports = {
     siginup : async (req, res) =>{
 
         const {email, name, pw, birth} = req.body;
-
-
         var date = moment(birth).format('YYYY-MM-DD')
-
 
         await User.findOne({email: email})
         .then(async (result)=>{
-            // console.log(result)
+            
             if(result === null){
-                
                 await User.create({email: email, name: name,pw: pw, birth: date})
                         .then(()=>{
                         res.status(200).send(util.successTrue(statusCode.OK,responseMsg.SIGNUP_SUCCESS))
@@ -44,7 +40,7 @@ module.exports = {
             res.status(200).send(util.successFalse(statusCode.DB_ERROR,responseMsg.DB_ERROR))
         })
         
-        const uid = await User.findOne({email: email},{_id:1})
+        const uid = await User.findOne({email: email}, {_id:1})
         console.log(uid);
         
         // emotion, whether 초기화
@@ -56,10 +52,9 @@ module.exports = {
 
     signin : async ( req, res ) => {
         
-
         const {email, pw} = req.body;
 
-        await User.findOne({email: email},{pw : 1,_id:1})
+        await User.findOne({email: email}, {pw : 1, _id:1})
         .then(async (user)=>{
                 if(user === null){
                     return res.status(200).send(util.successFalse(statusCode.DB_ERROR,responseMsg.NO_USER))

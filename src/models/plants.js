@@ -1,30 +1,20 @@
 "use strict";
-
 const mongoose = require('mongoose');
 
-const userSchema = new mongoose.Schema({
-    name: {
+const plantSchema = new mongoose.Schema({
+      plant_name: { // ÏãùÎ¨º Ïù¥Î¶Ñ
         type: String,
         required: true,
       },
-      data: {
+      floriography: { // ÍΩÉÎßê
         type: String,
-        required: true,
+        require: true
       },
-}, {collection: 'users'});
+      plant_desc: {
+        type: String,
+        require: true
+      }
 
+}, {versionKey:false}, {collection: 'plants'});
 
-
-userSchema.statics.findAll = function () {
-    // return promise
-    // V4∫Œ≈Õ exec() « ø‰æ¯¿Ω
-    return this.find({});
-  };
-
-// Find One by todoid
-userSchema.statics.findOneByUserName = function (userName) {
-    return this.findOne({ userName });
-  };
-
-
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('Plant', plantSchema);
